@@ -51,6 +51,7 @@ function LaOca(tablero,coleccionFichas,numeroJugadores){
 }
 
 function FaseInicio(juego){
+	this.titulo="Inicial";
 	this.juego=juego;
 	this.asignarFicha=function(jugador){
 		this.juego.asignarFicha(jugador);
@@ -64,6 +65,7 @@ function FaseInicio(juego){
 }
 
 function FaseJugar(juego){
+	this.titulo="Jugar";
 	this.juego=juego;
 	this.asignarFicha=function(jugador){
 		console.log("Ahora no puedes escoger ficha.");
@@ -71,9 +73,13 @@ function FaseJugar(juego){
 	this.lanzar=function(jugador){
 		jugador.turno.lanzar(jugador);
 	}
+	this.lanzarPruebas=function(jugador,mov){
+		jugador.turno.lanzarPruebas(jugador,mov);
+	}
 }
 
 function FaseFinal(juego){
+	this.titulo="Final";
 	this.juego=juego;
 	this.asignarFicha=function(jugador){
 		console.log("Se ha acabado la partida.");
@@ -308,6 +314,19 @@ function MeToca(){
 			jugador.cambiarTurno();
 		}
 	}
+	this.lanzarPruebas=function(jugador,mov){
+		if(jugador.castigo==0) {
+		console.log("Tirada: "+mov);
+		jugador.ficha.avanzar(mov);
+		}
+		else
+		{
+			jugador.castigo=jugador.castigo-1;
+			console.log("Estás en casilla penalizada, te quedan "+jugador.castigo+" turnos sin tirar.");
+			jugador.cambiarTurno();
+		}
+	}
+
 
 }
 
@@ -316,7 +335,9 @@ function NoMeToca(){
 	this.lanzar=function(jugador){
 		console.log("No es tu turno");
 	}
-
+	this.lanzar=function(jugador,mov){
+		console.log("No es tu turno");
+	}
 }
 
 
@@ -331,6 +352,9 @@ function Jugador(nombre,juego){
 	}
 	this.lanzar=function(){
 		this.juego.fase.lanzar(this);
+	}
+	this.lanzarPruebas=function(mov){
+		this.juego.fase.lanzarPruebas(this,mov);
 	}
 	this.cambiarTurno=function(){
 		this.juego.cambiarTurno(this);

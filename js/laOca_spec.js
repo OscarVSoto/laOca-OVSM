@@ -211,20 +211,30 @@ describe("El juego de la Oca...",function(){
 			expect(this.juego.turno.nombre).toEqual(this.ju1.nombre);
 		});
 
-		it("... el jugador 2 no tiene el turno al mismo tiempo",function(){
+		it("... el jugador 2 no tiene el turno",function(){
 			expect(this.juego.turno.nombre).not.toEqual(this.ju2.nombre);
 		});
 
-		xit("... el jugador uno cede el turno al jugador dos",function(){
-			this.ju1.lanzar();
+		it("... el jugador uno cede el turno al jugador dos",function(){
+			this.ju1.lanzarPruebas(3);
+			expect(this.juego.turno.nombre).toEqual(this.ju2.nombre);
 		});
 
-		xit("... el jugador dos cede el turno al jugador uno",function(){
-
+		it("... el jugador dos cede el turno al jugador uno",function(){
+			this.ju1.lanzarPruebas(3);
+			this.ju2.lanzarPruebas(3);
+			expect(this.juego.turno.nombre).toEqual(this.ju1.nombre);
 		});
-		xit("... el jugador uno no cede el turno al jugador dos si cae en casilla especial",function(){
-
+		it("... el jugador uno no cede el turno al jugador dos si cae en casilla especial",function(){
+			this.ju1.lanzarPruebas(4);
+			expect(this.juego.turno.nombre).not.toEqual(this.ju2.nombre);
 		});
+		it("... el jugador dos no cede el turno al jugador uno si cae en casilla especial",function(){
+			this.ju1.lanzarPruebas(3);
+			this.ju2.lanzarPruebas(4);
+			expect(this.juego.turno.nombre).toEqual(this.ju2.nombre);
+		});
+
 	});
 
 	describe("Comprobar el funcionamiento de las fases...",function(){
@@ -234,11 +244,22 @@ describe("El juego de la Oca...",function(){
 			this.juego = new LaOca(this.tablero,this.coleccionFichas,2);
 			this.ju1=new Jugador("Pepe",this.juego);
 			this.ju1.asignarFicha();
+		});
+		it("... el juego esta en fase de Inicio al no tener 2 jugadores",function(){
+			expect(this.juego.fase.titulo).toEqual("Inicial");
+		});
+		it("... el juego esta en fase de Jugar al tener 2 jugadores",function(){
+			this.ju2 = new Jugador("Luis",this.juego);
+			this.ju2.asignarFicha();
+			expect(this.juego.fase.titulo).toEqual("Jugar");
+		});
+		it("... el juego esta en fase de Final al haber llegado un jugador a la meta",function(){
 			this.ju2 = new Jugador("Luis",this.juego);
 			this.ju2.asignarFicha();
 			this.juego.setTurno(this.ju1);
+			this.ju1.lanzarPruebas(62);
+			expect(this.juego.fase.titulo).toEqual("Final");
 		});
-
 
 	});
 
